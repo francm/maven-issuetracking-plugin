@@ -1,4 +1,4 @@
-package cz.fg.maven.issuetracking;
+package cz.fg.issuetracking.maven;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
