@@ -13,23 +13,44 @@ public class VersionImpl implements Version {
     VersionDescriptor versionDescriptor;
     String description;
     Date date;
+    boolean released;
 
-    public VersionImpl(VersionDescriptor versionDescriptor, String description, Date date) {
+    public VersionImpl(VersionDescriptor versionDescriptor, String description, Date date, boolean released) {
         this.versionDescriptor = versionDescriptor;
         this.description = description;
         this.date = date;
+        this.released = released;
     }
 
+    @Override
     public VersionDescriptor getVersionDescriptor() {
         return versionDescriptor;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
+    @Override
     public Date getDate() {
         return date;
     }
 
+    @Override
+    public boolean isReleased() {
+        return released;
+    }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("Version");
+        sb.append("{versionDescriptor=").append(versionDescriptor.toString());
+        sb.append(", description='").append(description).append('\'');
+        sb.append(", date=").append(date);
+        sb.append(", released=").append(released);
+        sb.append('}');
+        return sb.toString();
+    }
 }

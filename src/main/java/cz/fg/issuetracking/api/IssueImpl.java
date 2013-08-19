@@ -47,4 +47,18 @@ public class IssueImpl implements Issue {
     public boolean isDone() {
         return done;
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("IssueImpl");
+        sb.append("{id='").append(id).append('\'');
+        sb.append(", name='").append(name).append('\'');
+        sb.append(", url='").append(url).append('\'');
+        sb.append(", developer='").append(developer).append('\'');
+        sb.append(", versionDescriptor=").append(versionDescriptor);
+        sb.append(", done=").append(done);
+        sb.append('}');
+        return sb.toString();
+    }
 }

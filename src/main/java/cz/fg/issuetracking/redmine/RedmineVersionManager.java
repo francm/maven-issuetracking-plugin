@@ -18,12 +18,7 @@ public class RedmineVersionManager implements VersionManager {
     String project;
 
     @Override
-    public List<Version> getSleepingVersions() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public List<Version> getUnderDevelopmentVersions() {
+    public List<Version> getUnreleasedVersions() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 

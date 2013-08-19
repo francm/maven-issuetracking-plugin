@@ -14,18 +14,24 @@ public interface VersionManager {
      * Sleeping versions
      * @return list of versions or empty list
      */
-    List<Version> getSleepingVersions();
+    //public List<Version> getSleepingVersions();
 
     /**
      * Under development versions
      * @return list of versions or empty list
      */
-    List<Version> getUnderDevelopmentVersions();
+    //public List<Version> getUnderDevelopmentVersions();
+
+    /**
+     * Sleeping versions
+     * @return list of versions or empty list
+     */
+    public List<Version> getUnreleasedVersions();
 
     /**
      * Released versions
      * @return list of versions or empty list
      */
-    List<Version> getReleasedVersions();
+    public List<Version> getReleasedVersions();
 
 }

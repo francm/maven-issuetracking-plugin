@@ -28,4 +28,10 @@ public interface Version {
      */
     public Date getDate();
 
+    /**
+     * Get version state
+     * @return true if version is released
+     */
+    public boolean isReleased();
+
 }

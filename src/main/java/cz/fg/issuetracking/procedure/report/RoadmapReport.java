@@ -20,7 +20,7 @@ public class RoadmapReport extends ChangelogReport {
 
     @Override
     protected List<Version> getVersions() {
-        return versions.getUnderDevelopmentVersions();
+        return versions.getUnreleasedVersions();
     }
 
 }
