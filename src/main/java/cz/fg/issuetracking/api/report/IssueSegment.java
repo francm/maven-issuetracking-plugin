@@ -22,6 +22,9 @@ public class IssueSegment implements ReportSegment {
 
     @Override
     public String getAsString() {
-        return issue.toString();
+        StringBuilder r = new StringBuilder();
+        r.append("#").append(issue.getId()).append(" ").append(issue.getName());
+        r.append(" - ").append(issue.getUrl()).append(" (").append(issue.getDeveloper()).append(")");
+        return r.toString();
     }
 }

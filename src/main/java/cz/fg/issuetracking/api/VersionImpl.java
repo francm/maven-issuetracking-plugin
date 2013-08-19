@@ -10,16 +10,23 @@ import java.util.Date;
  */
 public class VersionImpl implements Version {
 
+    String versionValue;
     VersionDescriptor versionDescriptor;
     String description;
     Date date;
     boolean released;
 
-    public VersionImpl(VersionDescriptor versionDescriptor, String description, Date date, boolean released) {
-        this.versionDescriptor = versionDescriptor;
+    public VersionImpl(String versionValue, String description, Date date, boolean released) {
+        this.versionValue = versionValue;
+        this.versionDescriptor = versionValue==null?null:new VersionDescriptor(versionValue);
         this.description = description;
         this.date = date;
         this.released = released;
+    }
+
+    @Override
+    public String getVersionValue() {
+        return versionValue;
     }
 
     @Override

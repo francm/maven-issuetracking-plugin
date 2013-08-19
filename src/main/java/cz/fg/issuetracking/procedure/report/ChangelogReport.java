@@ -34,12 +34,23 @@ public class ChangelogReport implements CreateReport {
         for (VersionDescriptor version : versions) {
             Version versionInfo = versionMap.get(version);
             report.addVersionSegment(versionInfo);
-            List<Issue> changes = changeMap.get(version);
+            List<Issue> changes = getSortedIssues(changeMap.get(version));
             for (Issue issue : changes) {
                 report.addIssueSegment(issue);
             }
         }
         return report;
+    }
+
+    protected List<Issue> getSortedIssues(List<Issue> issues) {
+        List<Issue> result = new ArrayList<Issue>(issues);
+        Collections.sort(result,new Comparator<Issue>() {
+            @Override
+            public int compare(Issue o1, Issue o2) {
+                return o1.getId().compareTo(o2.getId());
+            }
+        });
+        return result;
     }
 
     protected ArrayList<VersionDescriptor> getSortedVersions(Collection<VersionDescriptor> versionDescriptors) {

@@ -7,7 +7,7 @@ import cz.fg.issuetracking.api.VersionManager;
 import java.util.List;
 
 /**
- * TODO
+ * Version manager Redmine implementation
  *
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 22:11

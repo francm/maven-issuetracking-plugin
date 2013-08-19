@@ -12,6 +12,6 @@ public interface ReportSegment {
      * Dump segment to string
      * @return string value
      */
-    String getAsString();
+    public String getAsString();
 
 }

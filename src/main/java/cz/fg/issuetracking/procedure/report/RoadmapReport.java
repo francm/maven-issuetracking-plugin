@@ -3,6 +3,7 @@ package cz.fg.issuetracking.procedure.report;
 import cz.fg.issuetracking.api.Issue;
 import cz.fg.issuetracking.api.Version;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,7 +16,10 @@ public class RoadmapReport extends ChangelogReport {
 
     @Override
     protected List<Issue> getIssues() {
-        return issues.getUnderDevelopmentIssues();
+        List<Issue> result = new ArrayList<Issue>();
+        result.addAll(issues.getUnderDevelopmentIssues());
+        result.addAll(issues.getSolvedIssues());
+        return result;
     }
 
     @Override

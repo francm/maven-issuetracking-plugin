@@ -11,6 +11,12 @@ import java.util.Date;
 public interface Version {
 
     /**
+     * Get version number value
+     * @return version value as returned by issue tracker
+     */
+    public String getVersionValue();
+
+    /**
      * Version number descriptor
      * @return version descriptor object
      */

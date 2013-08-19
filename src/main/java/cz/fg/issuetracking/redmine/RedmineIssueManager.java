@@ -5,7 +5,6 @@ import com.taskadapter.redmineapi.RedmineManager;
 import cz.fg.issuetracking.api.Issue;
 import cz.fg.issuetracking.api.IssueImpl;
 import cz.fg.issuetracking.api.IssueManager;
-import cz.fg.issuetracking.api.VersionDescriptor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * TODO
+ * Issue manager Redmine implementation
  *
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 21:00
@@ -42,7 +41,8 @@ public class RedmineIssueManager implements IssueManager {
 
     private Issue convert(com.taskadapter.redmineapi.bean.Issue issue) {
         com.taskadapter.redmineapi.bean.Version targetVersion = issue.getTargetVersion();
-        VersionDescriptor version = targetVersion==null?null:new VersionDescriptor(targetVersion.getName());
+        //VersionDescriptor version = targetVersion==null?null:new VersionDescriptor(targetVersion.getName());
+        String version = targetVersion==null?null:targetVersion.getName();
         Issue result = new IssueImpl(issue.getId().toString(),issue.getSubject(),null,null,version,false);
         return result;
     }

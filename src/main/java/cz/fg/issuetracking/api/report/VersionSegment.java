@@ -22,6 +22,11 @@ public class VersionSegment implements ReportSegment {
 
     @Override
     public String getAsString() {
-        return version.toString();
+        StringBuilder r = new StringBuilder();
+        r.append("===================================================\n")
+                .append(version.getVersionDescriptor()).append(" - ")
+                .append(version.getDate()).append("\n")
+                .append(version.getDescription()).append("\n");
+        return r.toString();
     }
 }

@@ -12,45 +12,26 @@ import org.junit.Test;
 import java.util.List;
 
 /**
- * Changelog test
+ * Roadmap test
  *
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 22:28
  */
-public class RoadmapReportTest {
+public class RoadmapReportTest extends ChangelogReportTest {
 
     @Test
     public void testShouldCreateReport() {
-        ChangelogReport report = new ChangelogReport();
+        RoadmapReport report = new RoadmapReport();
         report.setVersions(VersionManagerFactory.getInstance());
         report.setIssues(IssueManagerFactory.getInstance());
 
         Report result = report.create();
         Assert.assertNotNull("Null report result",result);
         List<ReportSegment> segments = result.getSegments();
-        Assert.assertEquals("Bad number of report segments",19,segments.size());
+        Assert.assertEquals("Bad number of report segments",3,segments.size());
         Assert.assertEquals("Bad report output",
-                "=1#1" +
-                "=1.0.1#389" +
-                "=1.1#9473#9475" +
-                "=1.2#12988#12989#12991" +
-                "=2.RC#13463" +
-                "=2#13467#13474#13495#13500#13666",
+                "= unknown#20328#20329",
                 narrowReport(segments)
         );
     }
-
-    protected String narrowReport(List<ReportSegment> segments) {
-        StringBuilder sb = new StringBuilder();
-        for (ReportSegment segment : segments) {
-            if ( segment instanceof IssueSegment) {
-                sb.append("#").append(((IssueSegment) segment).getIssue().getId());
-            }
-            else if ( segment instanceof VersionSegment) {
-                sb.append("=").append(((VersionSegment)segment).getVersion().getVersionDescriptor().toString());
-            }
-        }
-        return sb.toString();
-    }
-
 }

@@ -17,11 +17,16 @@ public class StringReportRender implements ReportRender {
     @Override
     public void render(Report report) {
         for (ReportSegment segment : report.getSegments()) {
-            result.append(segment.getAsString()).append("\n");
+            result.append(renderSegment(segment)).append("\n");
         }
+    }
+
+    protected String renderSegment(ReportSegment segment) {
+        return segment.getAsString();
     }
 
     public String getResult() {
         return result.toString();
     }
+
 }

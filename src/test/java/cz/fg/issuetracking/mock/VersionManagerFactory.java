@@ -42,14 +42,12 @@ public class VersionManagerFactory {
 
     static Version createReleasedVersion(String versionNumber,int year, int month, int day) {
         Date released = new DateTime().withDate(year, month, day).withTimeAtStartOfDay().toDate();
-        VersionDescriptor vd = new VersionDescriptor(versionNumber);
-        Version v = new VersionImpl(vd,"Description of version "+versionNumber,released,true);
+        Version v = new VersionImpl(versionNumber,"Description of version "+versionNumber,released,true);
         return v;
     }
 
     static Version createUnreleasedVersion(String versionNumber) {
-        VersionDescriptor vd = new VersionDescriptor(versionNumber);
-        Version v = new VersionImpl(vd,"Description of version "+versionNumber,null,false);
+        Version v = new VersionImpl(versionNumber,"Description of version "+versionNumber,null,false);
         return v;
     }
 

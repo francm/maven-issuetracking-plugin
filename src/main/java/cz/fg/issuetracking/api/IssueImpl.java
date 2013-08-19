@@ -15,12 +15,12 @@ public class IssueImpl implements Issue {
     VersionDescriptor versionDescriptor;
     boolean done;
 
-    public IssueImpl(String id, String name, String url, String developer, VersionDescriptor versionDescriptor, boolean done) {
+    public IssueImpl(String id, String name, String url, String developer, String version, boolean done) {
         this.id = id;
         this.name = name;
         this.url = url;
         this.developer = developer;
-        this.versionDescriptor = versionDescriptor;
+        this.versionDescriptor = version==null?null:new VersionDescriptor(version);
         this.done = done;
     }
 
