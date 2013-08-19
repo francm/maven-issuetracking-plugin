@@ -1,4 +1,8 @@
-maven-redmine
-=============
+maven-issuetracking
+===================
+Under development
 
-Maven plugin - Redmine integration
+Maven plugin - Issue Tracking integration
+
+* Redmine support
+* Release actions automatization
