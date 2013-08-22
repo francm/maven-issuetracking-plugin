@@ -24,7 +24,7 @@ public class VersionSegment implements ReportSegment {
     public String getAsString() {
         StringBuilder r = new StringBuilder();
         r.append("===================================================\n")
-                .append(version.getVersionDescriptor()).append(" - ")
+                .append(version.getVersionValue()).append(" - ")
                 .append(version.getDate()).append("\n")
                 .append(version.getDescription()).append("\n");
         return r.toString();

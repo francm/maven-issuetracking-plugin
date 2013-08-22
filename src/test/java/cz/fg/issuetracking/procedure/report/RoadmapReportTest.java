@@ -1,9 +1,7 @@
 package cz.fg.issuetracking.procedure.report;
 
-import cz.fg.issuetracking.api.report.IssueSegment;
 import cz.fg.issuetracking.api.report.Report;
 import cz.fg.issuetracking.api.report.ReportSegment;
-import cz.fg.issuetracking.api.report.VersionSegment;
 import cz.fg.issuetracking.mock.IssueManagerFactory;
 import cz.fg.issuetracking.mock.VersionManagerFactory;
 import org.junit.Assert;
