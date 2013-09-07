@@ -1,5 +1,6 @@
 package cz.fg.issuetracking.redmine;
 
+import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
 import cz.fg.issuetracking.api.IssueManager;
 import cz.fg.issuetracking.api.ManagerFactory;
@@ -82,11 +83,22 @@ public class RedmineManagerFactory implements ManagerFactory {
     }
 
     protected String getProjectId() {
-        String property = properties.getProperty("redmine-projectId");
-        if ( property==null ) {
+        String projectId = properties.getProperty("redmine-projectId");
+        if ( projectId==null ) {
             throw new IllegalArgumentException("Project id missing - property 'redmine-projectId'");
         }
-        return property;
+        // if key is provided get projectId
+        try {
+            Integer.valueOf(projectId);
+        }
+        catch (NumberFormatException e) {
+            try {
+                projectId = redmineManager.getProjectByKey(projectId).getId().toString();
+            } catch (RedmineException e1) {
+                throw new RuntimeException(e1);
+            }
+        }
+        return projectId;
     }
 
     protected String getCurrentVersion() {

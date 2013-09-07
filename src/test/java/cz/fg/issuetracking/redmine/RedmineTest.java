@@ -24,6 +24,7 @@ import java.util.Properties;
 public class RedmineTest {
 
     @Test
+    @Ignore
     public void testShouldCreateManager() {
         RedmineManagerFactory f = createManagerFactory();
         IssueManager issueManager = f.getIssueManager();
@@ -74,7 +75,12 @@ public class RedmineTest {
     public void testCreate() {
         RedmineManagerFactory f = createManagerFactory();
         IssueManager issueManager = f.getIssueManager();
-        Issue issue = issueManager.createIssue("Test", "content", "MFR");
+        //Issue issue = issueManager.createIssue("Test", "content", "SCMCOMMITER");
+        VersionManager versionManager = f.getVersionManager();
+        //versionManager.createVersion("1.0.0");
+        //issueManager.assignVersion("1.0.0",issue.getId());
+        //issueManager.closeIssues("1.0.0");
+        versionManager.closeVersion("1.0.0");
     }
 
     private RedmineManagerFactory createManagerFactory() {

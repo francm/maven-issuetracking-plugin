@@ -1,7 +1,6 @@
 package cz.fg.issuetracking.redmine;
 
 import com.taskadapter.redmineapi.RedmineException;
-import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.Project;
 import cz.fg.issuetracking.api.Version;
 import cz.fg.issuetracking.api.VersionImpl;
@@ -81,6 +80,9 @@ public class RedmineVersionManager implements VersionManager {
                     .getVersions(Integer.valueOf(project.getProjectId()));
             for (com.taskadapter.redmineapi.bean.Version version : versions) {
                 if ( versionValue.equals(version.getName()) ) {
+                    // redmine-java-api/issues/97
+                    //version.setDueDate(new Date());
+                    version.setDueDate(null);
                     version.setStatus("closed");
                     project.getRedmineManager().update(version);
                     return;
@@ -89,7 +91,7 @@ public class RedmineVersionManager implements VersionManager {
         } catch (RedmineException e) {
             throw new RuntimeException(e);
         }
-        throw new RuntimeException("Versions not found");
+        throw new RuntimeException("Version not found");
     }
 
 }

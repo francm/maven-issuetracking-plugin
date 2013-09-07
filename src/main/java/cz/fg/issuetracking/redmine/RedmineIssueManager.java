@@ -4,6 +4,7 @@ import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.Journal;
 import com.taskadapter.redmineapi.bean.User;
+import com.taskadapter.redmineapi.bean.Version;
 import cz.fg.issuetracking.api.Issue;
 import cz.fg.issuetracking.api.IssueImpl;
 import cz.fg.issuetracking.api.IssueManager;
@@ -57,7 +58,7 @@ public class RedmineIssueManager implements IssueManager {
         User user = issue.getAssignee();
         String developer = user==null?null:convert(user);
         Issue result = new IssueImpl(issue.getId().toString(),issue.getSubject(),issue.getDescription(),null,developer,version,false);
-        log.debug("Issue converted from Redmine object: {}",issue);
+        log.debug("Issue converted from Redmine object: {}", issue);
         return result;
     }
 
@@ -120,6 +121,40 @@ public class RedmineIssueManager implements IssueManager {
         p.put("status_id",EQUALS + project.getStateClosed());
         p.put("fixed_version_id",ALL);
         return getIssues(p);
+    }
+
+    @Override
+    public void closeIssues(String versionValue) {
+        Map<String, String> p = createParams();
+        p.put("status_id",NOT_EQUALS + project.getStateClosed());
+        p.put("fixed_version_id",project.getVersionIdByName(versionValue).toString());
+        try {
+            List<com.taskadapter.redmineapi.bean.Issue> issues = project.getRedmineManager().getIssues(p);
+            for (com.taskadapter.redmineapi.bean.Issue issue : issues) {
+                issue.setStatusId(Integer.valueOf(project.getStateClosed()));
+                issue.setDoneRatio(100);
+                project.getRedmineManager().update(issue);
+            }
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void assignVersion(String versionValue, String... issueIds) {
+        try {
+            Version version = new Version();
+            version.setId(project.getVersionIdByName(versionValue));
+            version.setName(versionValue);
+            for (String issueId : issueIds) {
+                com.taskadapter.redmineapi.bean.Issue issue = project.getRedmineManager()
+                        .getIssueById(Integer.valueOf(issueId));
+                issue.setTargetVersion(version);
+                project.getRedmineManager().update(issue);
+            }
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

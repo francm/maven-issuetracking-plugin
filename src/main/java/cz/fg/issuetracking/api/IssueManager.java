@@ -41,6 +41,19 @@ public interface IssueManager {
     public List<Issue> getReleasedIssues();
 
     /**
+     * Close all issues assigned to version
+     * @param versionValue version number value
+     */
+    public void closeIssues(String versionValue);
+
+    /**
+     * Assign version to issues specified by id
+     * @param versionValue version number value
+     * @param issueIds issue ids
+     */
+    public void assignVersion(String versionValue, String... issueIds);
+
+    /**
      * Create new issue
      * @param name issue name
      * @param content issue content

@@ -6,6 +6,7 @@ import com.taskadapter.redmineapi.bean.CustomField;
 import com.taskadapter.redmineapi.bean.User;
 import com.taskadapter.redmineapi.bean.Version;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +42,7 @@ public class RedmineProject {
 
     public RedmineProject(RedmineManager redmineManager) {
         this.redmineManager = redmineManager;
+        this.customFields = new ArrayList<CustomField>();
     }
 
     public RedmineManager getRedmineManager() {
@@ -137,7 +139,7 @@ public class RedmineProject {
         try {
             List<User> users = redmineManager.getUsers();
             for (User user : users) {
-                if ( name.equals(user.getLogin()) ) {
+                if ( name.equalsIgnoreCase(user.getLogin()) ) {
                     return user;
                 }
             }
