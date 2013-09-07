@@ -10,14 +10,16 @@ public class IssueImpl implements Issue {
 
     String id;
     String name;
+    String content;
     String url;
     String developer;
     VersionDescriptor versionDescriptor;
     boolean done;
 
-    public IssueImpl(String id, String name, String url, String developer, String version, boolean done) {
+    public IssueImpl(String id, String name, String content,String url, String developer, String version, boolean done) {
         this.id = id;
         this.name = name;
+        this.content = content;
         this.url = url;
         this.developer = developer;
         this.versionDescriptor = version==null?null:new VersionDescriptor(version);
@@ -30,6 +32,10 @@ public class IssueImpl implements Issue {
 
     public String getName() {
         return name;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public String getUrl() {
@@ -54,6 +60,7 @@ public class IssueImpl implements Issue {
         sb.append("IssueImpl");
         sb.append("{id='").append(id).append('\'');
         sb.append(", name='").append(name).append('\'');
+        sb.append(", content='").append(content).append('\'');
         sb.append(", url='").append(url).append('\'');
         sb.append(", developer='").append(developer).append('\'');
         sb.append(", versionDescriptor=").append(versionDescriptor);

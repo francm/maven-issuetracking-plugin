@@ -18,17 +18,16 @@ import java.util.List;
  */
 public class RedmineVersionManager implements VersionManager {
 
-    RedmineManager redmine;
-    String project;
+    RedmineProject project;
 
-    public RedmineVersionManager(RedmineManager redmine, String project) {
-        this.redmine = redmine;
+    public RedmineVersionManager(RedmineProject project) {
         this.project = project;
     }
 
     protected List<Version> getVersions(boolean requireReleased) {
         try {
-            List<com.taskadapter.redmineapi.bean.Version> versions = redmine.getVersions(Integer.valueOf(project));
+            List<com.taskadapter.redmineapi.bean.Version> versions = project.getRedmineManager()
+                    .getVersions(Integer.valueOf(project.getProjectId()));
             List<Version> result = new ArrayList<Version>(versions.size());
             for (com.taskadapter.redmineapi.bean.Version version : versions) {
                 Version convert = convert(version);
@@ -65,10 +64,10 @@ public class RedmineVersionManager implements VersionManager {
     @Override
     public Version createVersion(String versionValue) {
         try {
-            Project redmineProject = redmine.getProjectByKey(project);
+            Project redmineProject = project.getRedmineManager().getProjectByKey(project.getProjectId());
             com.taskadapter.redmineapi.bean.Version version =
                     new com.taskadapter.redmineapi.bean.Version(redmineProject,versionValue);
-            com.taskadapter.redmineapi.bean.Version created = redmine.createVersion(version);
+            com.taskadapter.redmineapi.bean.Version created = project.getRedmineManager().createVersion(version);
             return convert(created);
         } catch (RedmineException e) {
             throw new RuntimeException(e);
@@ -78,11 +77,12 @@ public class RedmineVersionManager implements VersionManager {
     @Override
     public void closeVersion(String versionValue) {
         try {
-            List<com.taskadapter.redmineapi.bean.Version> versions = redmine.getVersions(Integer.valueOf(project));
+            List<com.taskadapter.redmineapi.bean.Version> versions = project.getRedmineManager()
+                    .getVersions(Integer.valueOf(project.getProjectId()));
             for (com.taskadapter.redmineapi.bean.Version version : versions) {
                 if ( versionValue.equals(version.getName()) ) {
                     version.setStatus("closed");
-                    redmine.update(version);
+                    project.getRedmineManager().update(version);
                     return;
                 }
             }

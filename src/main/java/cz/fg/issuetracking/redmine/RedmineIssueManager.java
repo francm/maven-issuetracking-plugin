@@ -25,20 +25,22 @@ public class RedmineIssueManager implements IssueManager {
 
     static final Logger log = LoggerFactory.getLogger(RedmineIssueManager.class);
 
-    RedmineManager redmine;
-    String project;
-    String currentVersionId;
+    static final String EQUALS ="=";
+    static final String NOT_EQUALS ="!";
+    static final String NOTHING="!*";
+    static final String ALL="*";
+    static final String OR="|";
 
-    public RedmineIssueManager(RedmineManager redmine, String project,String currentVersionId) {
-        this.redmine = redmine;
+    RedmineProject project;
+
+    public RedmineIssueManager(RedmineProject project) {
         this.project = project;
-        this.currentVersionId = currentVersionId;
     }
 
     protected List<Issue> getIssues(Map<String,String> params) {
         log.debug("Get issues {}",params);
         try {
-            List<com.taskadapter.redmineapi.bean.Issue> issues = redmine.getIssues(params);
+            List<com.taskadapter.redmineapi.bean.Issue> issues = project.getRedmineManager().getIssues(params);
             List<Issue> result = new ArrayList<Issue>(issues.size());
             for (com.taskadapter.redmineapi.bean.Issue issue : issues) {
                 result.add(convert(issue));
@@ -54,7 +56,8 @@ public class RedmineIssueManager implements IssueManager {
         String version = targetVersion==null?null:targetVersion.getName();
         User user = issue.getAssignee();
         String developer = user==null?null:convert(user);
-        Issue result = new IssueImpl(issue.getId().toString(),issue.getSubject(),null,developer,version,false);
+        Issue result = new IssueImpl(issue.getId().toString(),issue.getSubject(),issue.getDescription(),null,developer,version,false);
+        log.debug("Issue converted from Redmine object: {}",issue);
         return result;
     }
 
@@ -68,39 +71,39 @@ public class RedmineIssueManager implements IssueManager {
             r.append(user.getLastName());
             r.append(" ");
         }
-        r.deleteCharAt(r.length()-1);
+        r.deleteCharAt(r.length() - 1);
         return r.toString();
     }
 
     @Override
     public List<Issue> getSleepingIssues() {
         Map<String, String> p = createParams();
-        p.put("status_id","!6|7");
-        p.put("fixed_version_id","!*");
+        p.put("status_id",NOT_EQUALS + project.getStateResolved() + OR + project.getStateClosed() );
+        p.put("fixed_version_id",NOTHING);
         return getIssues(p);
     }
 
     @Override
     public List<Issue> getSolvedIssues() {
         Map<String, String> p = createParams();
-        p.put("status_id","=6");
-        p.put("fixed_version_id", currentVersionId);
+        p.put("status_id",EQUALS + project.getStateResolved());
+        p.put("fixed_version_id",project.getCurrentVersionId());
         return getIssues(p);
     }
 
     @Override
     public List<Issue> getUnderDevelopmentIssues() {
         Map<String, String> p = createParams();
-        p.put("status_id","!6|7");
-        p.put("fixed_version_id", currentVersionId);
+        p.put("status_id",NOT_EQUALS + project.getStateResolved() + OR + project.getStateClosed());
+        p.put("fixed_version_id",project.getCurrentVersionId());
         return getIssues(p);
     }
 
     @Override
     public List<Issue> getUnderDevelopmentSuspectsIssues() {
         Map<String, String> p = createParams();
-        p.put("status_id","=4");
-        p.put("fixed_version_id","!*");
+        p.put("status_id",EQUALS + project.getStateInProgress());
+        p.put("fixed_version_id",NOTHING);
         List<Issue> issues = getIssues(p);
         List<Issue> result = new ArrayList<Issue>(issues.size());
         for (Issue issue : issues) {
@@ -114,15 +117,30 @@ public class RedmineIssueManager implements IssueManager {
     @Override
     public List<Issue> getReleasedIssues() {
         Map<String, String> p = createParams();
-        p.put("status_id","=7");
-        p.put("fixed_version_id","*");
+        p.put("status_id",EQUALS + project.getStateClosed());
+        p.put("fixed_version_id",ALL);
         return getIssues(p);
+    }
+
+    @Override
+    public Issue createIssue(String name, String content, String developer) {
+        com.taskadapter.redmineapi.bean.Issue redmineIssue = new com.taskadapter.redmineapi.bean.Issue();
+        redmineIssue.setSubject(name);
+        redmineIssue.setDescription(content);
+        redmineIssue.setCustomFields(project.getCustomFields());
+        redmineIssue.setAuthor(project.getUserByName(developer));
+        try {
+            com.taskadapter.redmineapi.bean.Issue createdIssue = project.getRedmineManager().createIssue(project.getProjectId(), redmineIssue);
+            return convert(createdIssue);
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected Map<String,String> createParams() {
         Map<String,String> params = new HashMap<String, String>();
         params.put("set_filter","1");
-        params.put("project_id",project);
+        params.put("project_id",project.getProjectId());
         return params;
     }
 
@@ -130,10 +148,10 @@ public class RedmineIssueManager implements IssueManager {
         try {
             Integer id = Integer.valueOf(issue.getId());
             log.debug("Get issue {}",id);
-            com.taskadapter.redmineapi.bean.Issue redmineIssue = redmine.getIssueById(id, RedmineManager.INCLUDE.journals);
+            com.taskadapter.redmineapi.bean.Issue redmineIssue = project.getRedmineManager().getIssueById(id, RedmineManager.INCLUDE.journals);
             boolean result = isIssueWithSpentHours(redmineIssue) || isIssueWithDoneRatio(redmineIssue) || isIssueWithCommits(redmineIssue);
             if ( result ) {
-                log.debug("Issue {} is spsect as under development",redmineIssue);
+                log.debug("Issue {} is suspect as under development",redmineIssue);
             }
             return result;
         } catch (RedmineException e) {
@@ -157,7 +175,7 @@ public class RedmineIssueManager implements IssueManager {
         User user = journal.getUser();
         String login = user.getLogin();
         String firstName = user.getFirstName();
-        return login!=null?login.equals("SCM"):firstName.equals("SCM");
+        return login!=null?login.equals(project.getScmUsername()):firstName.equals(project.getScmUsername());
     }
 
     protected boolean isIssueWithSpentHours(com.taskadapter.redmineapi.bean.Issue issue) {
@@ -169,15 +187,5 @@ public class RedmineIssueManager implements IssueManager {
         Integer doneRatio = issue.getDoneRatio();
         return doneRatio!=0;
     }
-
-    /**
-     * Operators
-     * = is
-     * ! is not
-     * !* nothing
-     * * all
-     * @return
-     */
-
 
 }

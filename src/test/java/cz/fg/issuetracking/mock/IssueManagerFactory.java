@@ -57,7 +57,7 @@ public class IssueManagerFactory {
     }
 
     static Issue createIssue(String id, String name, String version, boolean done) {
-        Issue issue = new IssueImpl(id,name,"http://localhost/redmine/issue/"+id,"unknown",version,done);
+        Issue issue = new IssueImpl(id,name,"Content of "+name,"http://localhost/redmine/issue/"+id,"unknown",version,done);
         return issue;
     }
 

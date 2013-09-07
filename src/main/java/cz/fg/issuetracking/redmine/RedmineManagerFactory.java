@@ -1,13 +1,10 @@
 package cz.fg.issuetracking.redmine;
 
-import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
-import com.taskadapter.redmineapi.bean.Version;
 import cz.fg.issuetracking.api.IssueManager;
 import cz.fg.issuetracking.api.ManagerFactory;
 import cz.fg.issuetracking.api.VersionManager;
 
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -16,12 +13,12 @@ import java.util.Properties;
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         22.8.13 16:48
  */
-public class RedmineMangerFactory implements ManagerFactory {
+public class RedmineManagerFactory implements ManagerFactory {
 
     RedmineManager redmineManager;
     Properties properties;
 
-    public RedmineMangerFactory(Properties properties) {
+    public RedmineManagerFactory(Properties properties) {
         this.properties = properties;
     }
 
@@ -49,16 +46,39 @@ public class RedmineMangerFactory implements ManagerFactory {
 
     @Override
     public IssueManager getIssueManager() {
-        String currentVersion = getCurrentVersion();
-        String projectId = getProjectId();
         RedmineManager redmineManager = getRedmineManager();
-        Integer currentVersionId = getCurrentVersionId(redmineManager, projectId, currentVersion);
-        return new RedmineIssueManager(redmineManager, projectId, currentVersionId==null?null:currentVersionId.toString());
+        RedmineProject project = createRedmineProject(redmineManager);
+        return new RedmineIssueManager(project);
+    }
+
+    private RedmineProject createRedmineProject(RedmineManager redmineManager) {
+        RedmineProject project = new RedmineProject(redmineManager);
+        String projectId = getProjectId();
+        project.setProjectId(projectId);
+        String currentVersion = getCurrentVersion();
+        project.setCurrentVersion(currentVersion);
+        project.addCustomFieldValue(87,"Specializace","Java Developer");
+        project.setScmUsername("SCM");
+        project.setStateNew("1");
+        project.setStateInProgress("4");
+        project.setStateResolved("6");
+        project.setStateClosed("7");
+        /* FG statuses
+        <option value="1">Nový</option>
+        <option value="2">Reakce</option>
+        <option value="3">Ke korektuře</option>
+        <option value="4" selected="selected">Přiřazený</option>
+        <option value="5">Schválený</option>
+        <option value="6">Vyřešený</option>
+        <option value="7">Uzavřený</option>
+        */
+        return project;
     }
 
     @Override
     public VersionManager getVersionManager() {
-        return new RedmineVersionManager(getRedmineManager(), getProjectId());
+        RedmineProject project = createRedmineProject(getRedmineManager());
+        return new RedmineVersionManager(project);
     }
 
     protected String getProjectId() {
@@ -75,20 +95,6 @@ public class RedmineMangerFactory implements ManagerFactory {
             throw new IllegalArgumentException("Current version missing - property 'redmine-currentVersion'");
         }
         return property;
-    }
-
-    protected Integer getCurrentVersionId(RedmineManager redmineManager,String projectId,String versionName) {
-        try {
-            List<Version> versions = redmineManager.getVersions(Integer.valueOf(projectId));
-            for (Version version : versions) {
-                if ( versionName.equals(version.getName()) ) {
-                    return version.getId();
-                }
-            }
-        } catch (RedmineException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
     }
 
 }

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Properties;
 
 /**
- * TODO
+ * Redmine issue manager test
  *
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         22.8.13 17:03
@@ -25,7 +25,7 @@ public class RedmineTest {
 
     @Test
     public void testShouldCreateManager() {
-        RedmineMangerFactory f = createManager();
+        RedmineManagerFactory f = createManagerFactory();
         IssueManager issueManager = f.getIssueManager();
         VersionManager versionManager = f.getVersionManager();
         Assert.assertNotNull(issueManager);
@@ -35,7 +35,7 @@ public class RedmineTest {
     @Test
     @Ignore
     public void testShouldGetIssues() {
-        IssueManager issueManager = createManager().getIssueManager();
+        IssueManager issueManager = createManagerFactory().getIssueManager();
         List<Issue> releasedIssues = issueManager.getReleasedIssues();
         List<Issue> sleepingIssues = issueManager.getSleepingIssues();
         List<Issue> solvedIssues = issueManager.getSolvedIssues();
@@ -46,7 +46,7 @@ public class RedmineTest {
     @Test
     @Ignore
     public void testShouldGetVersions() {
-        VersionManager versionManager = createManager().getVersionManager();
+        VersionManager versionManager = createManagerFactory().getVersionManager();
         List<Version> releasedVersions = versionManager.getReleasedVersions();
         for (Version version : releasedVersions) {
             Assert.assertTrue(version.isReleased());
@@ -58,10 +58,11 @@ public class RedmineTest {
     }
 
     @Test
+    @Ignore
     public void testChangeLog() {
         ChangelogReport report = new ChangelogReport();
-        report.setVersions(createManager().getVersionManager());
-        report.setIssues(createManager().getIssueManager());
+        report.setVersions(createManagerFactory().getVersionManager());
+        report.setIssues(createManagerFactory().getIssueManager());
 
         Report result = report.create();
         StringReportRender sr = new StringReportRender();
@@ -69,9 +70,16 @@ public class RedmineTest {
         System.out.println(sr.getResult());
     }
 
-    private RedmineMangerFactory createManager() {
+    @Test
+    public void testCreate() {
+        RedmineManagerFactory f = createManagerFactory();
+        IssueManager issueManager = f.getIssueManager();
+        Issue issue = issueManager.createIssue("Test", "content", "MFR");
+    }
+
+    private RedmineManagerFactory createManagerFactory() {
         Properties properties = System.getProperties();
-        return new RedmineMangerFactory(properties);
+        return new RedmineManagerFactory(properties);
     }
 
 

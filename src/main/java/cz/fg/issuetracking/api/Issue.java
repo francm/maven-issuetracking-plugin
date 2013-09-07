@@ -10,6 +10,7 @@ public interface Issue {
 
     public String getId();
     public String getName();
+    public String getContent();
     public String getUrl();
     public String getDeveloper();
     public VersionDescriptor getVersionDescriptor();

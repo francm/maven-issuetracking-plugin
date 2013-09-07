@@ -40,4 +40,13 @@ public interface IssueManager {
      */
     public List<Issue> getReleasedIssues();
 
+    /**
+     * Create new issue
+     * @param name issue name
+     * @param content issue content
+     * @param developer developer
+     * @return new issue instance with new id set
+     */
+    public Issue createIssue(String name,String content,String developer);
+
 }
