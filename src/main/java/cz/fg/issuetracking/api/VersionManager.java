@@ -14,18 +14,6 @@ public interface VersionManager {
      * Sleeping versions
      * @return list of versions or empty list
      */
-    //public List<Version> getSleepingVersions();
-
-    /**
-     * Under development versions
-     * @return list of versions or empty list
-     */
-    //public List<Version> getUnderDevelopmentVersions();
-
-    /**
-     * Sleeping versions
-     * @return list of versions or empty list
-     */
     public List<Version> getUnreleasedVersions();
 
     /**
@@ -33,5 +21,17 @@ public interface VersionManager {
      * @return list of versions or empty list
      */
     public List<Version> getReleasedVersions();
+
+    /**
+     * Create new version for next development iteration
+     * @param versionValue version number
+     */
+    public Version createVersion(String versionValue);
+
+    /**
+     * Close version (set as released)
+     * @param versionValue version number
+     */
+    public void closeVersion(String versionValue);
 
 }

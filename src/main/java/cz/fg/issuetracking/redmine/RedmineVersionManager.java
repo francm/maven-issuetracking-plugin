@@ -2,6 +2,7 @@ package cz.fg.issuetracking.redmine;
 
 import com.taskadapter.redmineapi.RedmineException;
 import com.taskadapter.redmineapi.RedmineManager;
+import com.taskadapter.redmineapi.bean.Project;
 import cz.fg.issuetracking.api.Version;
 import cz.fg.issuetracking.api.VersionImpl;
 import cz.fg.issuetracking.api.VersionManager;
@@ -41,12 +42,12 @@ public class RedmineVersionManager implements VersionManager {
         }
     }
 
-    private Version convert(com.taskadapter.redmineapi.bean.Version version) {
+    protected Version convert(com.taskadapter.redmineapi.bean.Version version) {
         boolean released = isVersionReleased(version);
         return new VersionImpl(version.getName(),version.getDescription(),version.getDueDate(), released);
     }
 
-    private boolean isVersionReleased(com.taskadapter.redmineapi.bean.Version version) {
+    protected boolean isVersionReleased(com.taskadapter.redmineapi.bean.Version version) {
         String status = version.getStatus();
         return status.equals("closed");
     }
@@ -56,11 +57,39 @@ public class RedmineVersionManager implements VersionManager {
         return getVersions(false);
     }
 
-
-
     @Override
     public List<Version> getReleasedVersions() {
         return getVersions(true);
     }
-}
 
+    @Override
+    public Version createVersion(String versionValue) {
+        try {
+            Project redmineProject = redmine.getProjectByKey(project);
+            com.taskadapter.redmineapi.bean.Version version =
+                    new com.taskadapter.redmineapi.bean.Version(redmineProject,versionValue);
+            com.taskadapter.redmineapi.bean.Version created = redmine.createVersion(version);
+            return convert(created);
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void closeVersion(String versionValue) {
+        try {
+            List<com.taskadapter.redmineapi.bean.Version> versions = redmine.getVersions(Integer.valueOf(project));
+            for (com.taskadapter.redmineapi.bean.Version version : versions) {
+                if ( versionValue.equals(version.getName()) ) {
+                    version.setStatus("closed");
+                    redmine.update(version);
+                    return;
+                }
+            }
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
+        throw new RuntimeException("Versions not found");
+    }
+
+}

@@ -56,20 +56,6 @@ public class RedmineMangerFactory implements ManagerFactory {
         return new RedmineIssueManager(redmineManager, projectId, currentVersionId==null?null:currentVersionId.toString());
     }
 
-    private Integer getCurrentVersionId(RedmineManager redmineManager,String projectId,String versionName) {
-        try {
-            List<Version> versions = redmineManager.getVersions(Integer.valueOf(projectId));
-            for (Version version : versions) {
-                if ( versionName.equals(version.getName()) ) {
-                    return version.getId();
-                }
-            }
-        } catch (RedmineException e) {
-            throw new RuntimeException(e);
-        }
-        return null;
-    }
-
     @Override
     public VersionManager getVersionManager() {
         return new RedmineVersionManager(getRedmineManager(), getProjectId());
@@ -89,6 +75,20 @@ public class RedmineMangerFactory implements ManagerFactory {
             throw new IllegalArgumentException("Current version missing - property 'redmine-currentVersion'");
         }
         return property;
+    }
+
+    protected Integer getCurrentVersionId(RedmineManager redmineManager,String projectId,String versionName) {
+        try {
+            List<Version> versions = redmineManager.getVersions(Integer.valueOf(projectId));
+            for (Version version : versions) {
+                if ( versionName.equals(version.getName()) ) {
+                    return version.getId();
+                }
+            }
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
     }
 
 }

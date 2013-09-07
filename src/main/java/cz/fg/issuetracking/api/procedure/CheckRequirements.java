@@ -8,6 +8,9 @@ package cz.fg.issuetracking.api.procedure;
  */
 public interface CheckRequirements {
 
-    public void check();
+    /**
+     * Check requirements
+     */
+    public void check(ProcedureContext context);
 
 }

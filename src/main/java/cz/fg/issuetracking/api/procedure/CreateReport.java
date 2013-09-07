@@ -10,6 +10,10 @@ import cz.fg.issuetracking.api.report.Report;
  */
 public interface CreateReport {
 
+    /**
+     * Create issues report
+     * @return report
+     */
     public Report create();
 
 }
