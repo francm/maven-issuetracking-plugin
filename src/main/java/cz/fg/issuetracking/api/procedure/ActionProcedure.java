@@ -6,10 +6,8 @@ package cz.fg.issuetracking.api.procedure;
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 22:34
  */
-public interface ResolveRequirements {
+public interface ActionProcedure {
 
-    public void resolvePreview();
-
-    public void resolve();
+    public void process(ProcedureContext ctx);
 
 }

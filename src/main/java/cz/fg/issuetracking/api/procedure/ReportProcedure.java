@@ -8,7 +8,7 @@ import cz.fg.issuetracking.api.report.Report;
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 22:31
  */
-public interface CreateReport {
+public interface ReportProcedure {
 
     /**
      * Create issues report

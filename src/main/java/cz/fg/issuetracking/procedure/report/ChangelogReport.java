@@ -1,7 +1,7 @@
 package cz.fg.issuetracking.procedure.report;
 
 import cz.fg.issuetracking.api.*;
-import cz.fg.issuetracking.api.procedure.CreateReport;
+import cz.fg.issuetracking.api.procedure.ReportProcedure;
 import cz.fg.issuetracking.api.report.Report;
 import cz.fg.issuetracking.api.report.ReportImpl;
 
@@ -13,7 +13,7 @@ import java.util.*;
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 22:23
  */
-public class ChangelogReport implements CreateReport {
+public class ChangelogReport implements ReportProcedure {
 
     IssueManager issues;
     VersionManager versions;

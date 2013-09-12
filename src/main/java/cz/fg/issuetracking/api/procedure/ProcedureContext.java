@@ -20,8 +20,4 @@ public interface ProcedureContext {
      */
     public String getNextVersion();
 
-    public void setCurrentVersion(String currentVersion);
-
-    public void setNextVersion(String nextVersion);
-
 }

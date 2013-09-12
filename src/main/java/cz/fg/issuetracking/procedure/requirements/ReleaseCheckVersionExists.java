@@ -2,7 +2,7 @@ package cz.fg.issuetracking.procedure.requirements;
 
 import cz.fg.issuetracking.api.Version;
 import cz.fg.issuetracking.api.VersionManager;
-import cz.fg.issuetracking.api.procedure.CheckRequirements;
+import cz.fg.issuetracking.api.procedure.CheckProcedure;
 import cz.fg.issuetracking.api.procedure.ProcedureContext;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         18.8.13 22:19
  */
-public class ReleaseCheckVersionExists implements CheckRequirements {
+public class ReleaseCheckVersionExists implements CheckProcedure {
 
     VersionManager versionManager;
 
