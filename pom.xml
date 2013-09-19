@@ -5,6 +5,8 @@
     <packaging>maven-plugin</packaging>
     <version>1.0.0-SNAPSHOT</version>
     <name>Issue Tracking (initially Redmine) integration with Maven</name>
+    <url>https://github.com/francm/maven-issuetracking-plugin</url>
+    <description>Free Java open-source Maven plugin used to automatize release actions.</description>
 
     <developers>
         <developer>
@@ -30,11 +32,24 @@
     </properties>
 
     <scm>
-        <connection>scm:git:git@github.com:francm/maven-redmine.git</connection>
-        <url>scm:git:git@github.com:francm/maven-redmine.git</url>
+        <connection>scm:git:git://github.com/francm/maven-redmine.git</connection>
+        <url>https://github.com/francm/maven-issuetracking-plugin/tree/master</url>
         <developerConnection>scm:git:git@github.com:francm/maven-redmine.git</developerConnection>
     </scm>
-    
+
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <issueManagement>
+        <system>github</system>
+        <url>https://github.com/francm/maven-issuetracking-plugin/issues</url>
+    </issueManagement>
+
     <dependencies>
         <dependency>
             <groupId>com.taskadapter</groupId>
