@@ -31,12 +31,12 @@ public class ChangelogReportTest {
         List<ReportSegment> segments = result.getSegments();
         Assert.assertEquals("Bad number of report segments",19,segments.size());
         Assert.assertEquals("Bad report output",
-                "=1.0#1" +
-                "=1.0.1#389" +
-                "=1.1#9473#9475" +
-                "=1.2#12988#12989#12991" +
+                "=2.0.0#13467#13474#13495#13500#13666"+
                 "=2.0.0-RC#13463" +
-                "=2.0.0#13467#13474#13495#13500#13666",
+                "=1.2#12988#12989#12991" +
+                "=1.1#9473#9475" +
+                "=1.0.1#389" +
+                "=1.0#1"                ,
                 narrowReport(segments)
         );
     }

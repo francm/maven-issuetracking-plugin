@@ -55,7 +55,8 @@ public class ChangelogReport implements ReportProcedure {
 
     protected ArrayList<VersionDescriptor> getSortedVersions(Collection<VersionDescriptor> versionDescriptors) {
         ArrayList<VersionDescriptor> versions = new ArrayList<VersionDescriptor>(versionDescriptors);
-        Collections.sort(versions, new VersionComparator());
+        Comparator comparator = Collections.reverseOrder(new VersionComparator());
+        Collections.sort(versions, comparator);
         return versions;
     }
 
