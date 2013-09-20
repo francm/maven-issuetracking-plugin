@@ -18,11 +18,15 @@ public class VersionDescriptorTest {
 
     VersionComparator versionComparator = new VersionComparator();
 
+    static final int FIRST_BIGGER = 1;
+    static final int FIRST_SMALLER = -1;
+    static final int BOTH_EQUALS = 0;
+
     @Test
     public void testSnapshots() throws Exception {
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.0.0-SNAPSHOT"),
                         new VersionDescriptor("1.0.0")
@@ -30,7 +34,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.0.0"),
                         new VersionDescriptor("1.0.0-SNAPSHOT")
@@ -38,7 +42,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0.0-SNAPSHOT"),
                         new VersionDescriptor("1.0.1-SNAPSHOT")
@@ -51,7 +55,7 @@ public class VersionDescriptorTest {
     public void testCutVersions() throws Exception {
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1"),
                         new VersionDescriptor("1.0")
@@ -59,7 +63,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.1"),
                         new VersionDescriptor("1.1.0.0")
@@ -67,7 +71,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.1-SNAPSHOT"),
                         new VersionDescriptor("1.1.0.0-SNAPSHOT")
@@ -75,7 +79,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.0"),
                         new VersionDescriptor("1")
@@ -83,7 +87,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.1.0.0"),
                         new VersionDescriptor("1.1")
@@ -91,7 +95,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.1.0.0-SNAPSHOT"),
                         new VersionDescriptor("1.1-SNAPSHOT")
@@ -104,7 +108,7 @@ public class VersionDescriptorTest {
     public void testCombined() throws Exception {
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-alpha"),
                         new VersionDescriptor("1.0-beta")
@@ -112,7 +116,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-alpha"),
                         new VersionDescriptor("1.0-alpha")
@@ -120,10 +124,34 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-beta"),
                         new VersionDescriptor("1.0-alpha")
+                )
+        );
+
+        assertEquals(
+                FIRST_BIGGER,
+                versionComparator.compare(
+                        new VersionDescriptor("1.0"),
+                        new VersionDescriptor("1.0-alpha")
+                )
+        );
+
+        assertEquals(
+                FIRST_BIGGER,
+                versionComparator.compare(
+                        new VersionDescriptor("1.0"),
+                        new VersionDescriptor("1.0-rc")
+                )
+        );
+
+        assertEquals(
+                BOTH_EQUALS,
+                versionComparator.compare(
+                        new VersionDescriptor("1.0-RC"),
+                        new VersionDescriptor("1.0-rc")
                 )
         );
 
@@ -133,7 +161,7 @@ public class VersionDescriptorTest {
     public void testCombinedDifficult() throws Exception {
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-alpha-1"),
                         new VersionDescriptor("1.0-alpha-2")
@@ -141,7 +169,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-alpha-20"),
                         new VersionDescriptor("1.0-alpha-20")
@@ -149,7 +177,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-alpha-20"),
                         new VersionDescriptor("1.0-alpha-2")
@@ -162,7 +190,7 @@ public class VersionDescriptorTest {
     public void testCombinedDifficult2() throws Exception {
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("1.1-beta-2"),
                         new VersionDescriptor("1.0")
@@ -170,7 +198,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0-alpha-1"),
                         new VersionDescriptor("1.0")
@@ -178,7 +206,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("1.1-alpha-20"),
                         new VersionDescriptor("1.0-beta")
@@ -186,7 +214,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1.1-alpha-3"),
                         new VersionDescriptor("1.3")
@@ -199,7 +227,7 @@ public class VersionDescriptorTest {
     public void testCompareEasyNumberVersions() throws Exception {
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1"),
                         new VersionDescriptor("2")
@@ -207,7 +235,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("10"),
                         new VersionDescriptor("2")
@@ -215,7 +243,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("5"),
                         new VersionDescriptor("5")
@@ -228,7 +256,7 @@ public class VersionDescriptorTest {
     public void testCompareEasyAlfanumericVersions() throws Exception {
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("a"),
                         new VersionDescriptor("b")
@@ -236,7 +264,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("c"),
                         new VersionDescriptor("a")
@@ -244,7 +272,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("a"),
                         new VersionDescriptor("a")
@@ -257,7 +285,7 @@ public class VersionDescriptorTest {
     public void testCompareComplicatedNumberVersions() throws Exception {
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("1.0.0"),
                         new VersionDescriptor("2")
@@ -265,7 +293,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("10"),
                         new VersionDescriptor("2.0.0")
@@ -273,7 +301,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("5.0.0"),
                         new VersionDescriptor("5.0.0")
@@ -281,7 +309,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("5.0.1"),
                         new VersionDescriptor("5.0.0")
@@ -289,7 +317,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("5.0.0"),
                         new VersionDescriptor("5.1.0")
@@ -297,7 +325,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("5.0.5"),
                         new VersionDescriptor("5.1.0")
@@ -305,7 +333,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("5.1.10"),
                         new VersionDescriptor("5.1.0")
@@ -313,7 +341,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("5"),
                         new VersionDescriptor("5.1.0")
@@ -321,7 +349,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("5.1.1"),
                         new VersionDescriptor("5.1")
@@ -329,7 +357,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("5.0.11"),
                         new VersionDescriptor("5.0.3")
@@ -342,7 +370,7 @@ public class VersionDescriptorTest {
     public void testCompareComplicatedAlfanumericVersions() throws Exception {
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("a.a.a"),
                         new VersionDescriptor("b")
@@ -350,7 +378,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("f"),
                         new VersionDescriptor("b.a.a")
@@ -358,7 +386,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                0,
+                BOTH_EQUALS,
                 versionComparator.compare(
                         new VersionDescriptor("e.a.a"),
                         new VersionDescriptor("e.a.a")
@@ -366,7 +394,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("e.a.b"),
                         new VersionDescriptor("e.a.a")
@@ -374,7 +402,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("e.a.a"),
                         new VersionDescriptor("e.b.a")
@@ -382,7 +410,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("e.a.b"),
                         new VersionDescriptor("e.b.a")
@@ -390,7 +418,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                1,
+                FIRST_BIGGER,
                 versionComparator.compare(
                         new VersionDescriptor("e.b.f"),
                         new VersionDescriptor("e.b.a")
@@ -398,7 +426,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("e"),
                         new VersionDescriptor("e.b.a")
@@ -406,7 +434,7 @@ public class VersionDescriptorTest {
         );
 
         assertEquals(
-                -1,
+                FIRST_SMALLER,
                 versionComparator.compare(
                         new VersionDescriptor("e.b.b"),
                         new VersionDescriptor("e.b")

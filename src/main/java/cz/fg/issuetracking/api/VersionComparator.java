@@ -17,7 +17,7 @@ public class VersionComparator implements Comparator<VersionDescriptor> {
 
 		Iterator itAlfa = alfa.getIdentificators().iterator();
 		Iterator itBeta = beta.getIdentificators().iterator();
-
+        Object lastAlfa = null;
 		while(itAlfa.hasNext()) {
 			Object alfaVersion = itAlfa.next();
 			Object betaVersion = itBeta.hasNext() ? itBeta.next() : null;
@@ -45,9 +45,18 @@ public class VersionComparator implements Comparator<VersionDescriptor> {
 					if (result < 0) return -1;
 				}
 			}
+            lastAlfa = alfaVersion;
 		}
 
-		if(itBeta.hasNext()) return -1;
+		if(itBeta.hasNext()) {
+            Object nextVersion = itBeta.next();
+            if ( lastAlfa instanceof Integer ) {
+                return (nextVersion instanceof Integer)?-1:1;
+            }
+            else {
+                return -1;
+            }
+        }
 
 		return 0;
 	}
