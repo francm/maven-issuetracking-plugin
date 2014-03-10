@@ -1,4 +1,4 @@
-package cz.fg.issuetracking.procedure.requirements;
+package cz.fg.issuetracking.procedure.action;
 
 import cz.fg.issuetracking.api.IssueManager;
 import cz.fg.issuetracking.api.IssueState;

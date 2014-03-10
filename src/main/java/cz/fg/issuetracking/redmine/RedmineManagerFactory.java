@@ -19,8 +19,17 @@ public class RedmineManagerFactory implements ManagerFactory {
     RedmineManager redmineManager;
     Properties properties;
 
+    public RedmineManagerFactory() {
+        this.properties = new Properties(System.getProperties());
+    }
+
     public RedmineManagerFactory(Properties properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public void setProperties(Properties properties) {
+        this.properties.putAll(properties);
     }
 
     public RedmineManager getRedmineManager(Properties properties) {

@@ -10,7 +10,7 @@ public interface ReportRender {
 
     /**
      * Call report render
-     * @param report reposrt instance
+     * @param report report instance
      */
     void render(Report report);
 

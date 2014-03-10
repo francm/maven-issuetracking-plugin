@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.apache.maven.plugin.my.unit</groupId>
+    <artifactId>project-to-test</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>Test MyMojo</name>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>cz.fg.maven</groupId>
+                <artifactId>issuetracking-maven-plugin</artifactId>
+                <configuration>
+                    <properties>
+                        <redmine-currentVersion>3.3.2</redmine-currentVersion>
+                    </properties>
+                    <managerFactory implementation="cz.fg.issuetracking.mock.MockManagerFactory"/>
+                    <!-- test only -->
+                    <project implementation="cz.fg.issuetracking.maven.MockProject"/>
+                    <reportRender implementation="cz.fg.issuetracking.maven.TestReportRender"/>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

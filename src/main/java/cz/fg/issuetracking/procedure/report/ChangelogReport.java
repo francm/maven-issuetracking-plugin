@@ -18,6 +18,14 @@ public class ChangelogReport implements ReportProcedure {
     IssueManager issues;
     VersionManager versions;
 
+    public ChangelogReport() {
+    }
+
+    public ChangelogReport(ManagerFactory managerFactory) {
+        this.issues = managerFactory.getIssueManager();
+        this.versions = managerFactory.getVersionManager();
+    }
+
     @Override
     public Report create() {
         List<Issue> releasedIssues = getIssues();
@@ -33,6 +41,7 @@ public class ChangelogReport implements ReportProcedure {
         ReportImpl report = new ReportImpl();
         for (VersionDescriptor version : versions) {
             Version versionInfo = versionMap.get(version);
+            if ( versionInfo==null  ) continue;
             report.addVersionSegment(versionInfo);
             List<Issue> changes = getSortedIssues(changeMap.get(version));
             for (Issue issue : changes) {

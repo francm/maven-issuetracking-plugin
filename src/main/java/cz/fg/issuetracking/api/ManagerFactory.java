@@ -1,5 +1,7 @@
 package cz.fg.issuetracking.api;
 
+import java.util.Properties;
+
 /**
  * Manager factory
  *
@@ -7,6 +9,12 @@ package cz.fg.issuetracking.api;
  *         22.8.13 16:46
  */
 public interface ManagerFactory {
+
+    /**
+     * Set factory properties
+     * @param properties java properties
+     */
+    public void setProperties(Properties properties);
 
     /**
      * Get issue manager implementation
