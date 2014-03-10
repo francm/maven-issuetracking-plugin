@@ -6,3 +6,5 @@ Maven plugin - Issue Tracking integration
 
 * Redmine support
 * Release actions automatization
+
+Travis setup
