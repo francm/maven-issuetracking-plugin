@@ -28,12 +28,12 @@ public class ChangelogReport implements ReportProcedure {
 
     @Override
     public Report create() {
-        List<Issue> releasedIssues = getIssues();
-        Map<VersionDescriptor, List<Issue>> changeMap = fillChangeMap(releasedIssues);
-        List<Version> releasedVersions = getVersions();
-        Map<VersionDescriptor, Version> versionMap = fillVersionMap(releasedVersions);
-        ArrayList<VersionDescriptor> versions = getSortedVersions(changeMap.keySet());
-        ReportImpl report = createReport(changeMap, versionMap, versions);
+        List<Issue> issues = getIssues();
+        Map<VersionDescriptor, List<Issue>> changeMap = fillChangeMap(issues);
+        List<Version> versions = getVersions();
+        Map<VersionDescriptor, Version> versionMap = fillVersionMap(versions);
+        ArrayList<VersionDescriptor> sortedVersions = getSortedVersions(changeMap.keySet());
+        ReportImpl report = createReport(changeMap, versionMap, sortedVersions);
         return report;
     }
 

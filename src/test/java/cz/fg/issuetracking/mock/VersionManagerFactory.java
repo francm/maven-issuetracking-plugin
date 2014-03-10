@@ -1,7 +1,6 @@
 package cz.fg.issuetracking.mock;
 
 import cz.fg.issuetracking.api.Version;
-import cz.fg.issuetracking.api.VersionDescriptor;
 import cz.fg.issuetracking.api.VersionImpl;
 import cz.fg.issuetracking.api.VersionManager;
 import org.joda.time.DateTime;
@@ -29,10 +28,10 @@ public class VersionManagerFactory {
         released.add(createReleasedVersion("2.0.0", 2013,12,25));
 
         List<Version> unreleased = new ArrayList<Version>();
-        released.add(createUnreleasedVersion("2.1.0"));
-        released.add(createUnreleasedVersion("2.1.4"));
-        released.add(createUnreleasedVersion("2.2"));
-        released.add(createUnreleasedVersion("3.0"));
+        unreleased.add(createUnreleasedVersion("2.1.0"));
+        unreleased.add(createUnreleasedVersion("2.1.4"));
+        unreleased.add(createUnreleasedVersion("2.2"));
+        unreleased.add(createUnreleasedVersion("3.0"));
 
         VersionManager versionManager = Mockito.mock(VersionManager.class);
         Mockito.doReturn(released).when(versionManager).getReleasedVersions();

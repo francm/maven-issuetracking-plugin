@@ -18,6 +18,7 @@ import java.util.Properties;
  * @author Michal Franc, FG Forrest a.s. (c) 2013
  *         22.8.13 17:03
  */
+@Ignore
 public class RedmineTest {
 
     static RedmineManagerFactory managerFactory;

@@ -28,7 +28,7 @@ public class RoadmapReportTest extends ChangelogReportTest {
         List<ReportSegment> segments = result.getSegments();
         Assert.assertEquals("Bad number of report segments",3,segments.size());
         Assert.assertEquals("Bad report output",
-                "= unknown#20328#20329",
+                "=3.0#20328#20329",
                 narrowReport(segments)
         );
     }
