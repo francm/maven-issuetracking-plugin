@@ -29,9 +29,9 @@ public interface VersionManager {
     public Version createVersion(String versionValue);
 
     /**
-     * Close version (set as released)
+     * Release version (set as closed)
      * @param versionValue version number
      */
-    public void closeVersion(String versionValue);
+    public void releaseVersion(String versionValue);
 
 }

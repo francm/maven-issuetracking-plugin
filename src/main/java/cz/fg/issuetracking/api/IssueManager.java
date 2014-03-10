@@ -41,10 +41,18 @@ public interface IssueManager {
     public List<Issue> getReleasedIssues();
 
     /**
-     * Close all issues assigned to version
+     * Set state for all issues assigned to version
+     * @param state issue state
      * @param versionValue version number value
      */
-    public void closeIssues(String versionValue);
+    public void setIssueStateInVersion(IssueState state,String versionValue);
+
+    /**
+     * Set state for issues specified by id
+     * @param state issue state
+     * @param issueIds issue ids
+     */
+    public void setIssueState(IssueState state, String... issueIds);
 
     /**
      * Assign version to issues specified by id

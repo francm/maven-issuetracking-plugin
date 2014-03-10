@@ -5,9 +5,12 @@ import com.taskadapter.redmineapi.RedmineManager;
 import com.taskadapter.redmineapi.bean.CustomField;
 import com.taskadapter.redmineapi.bean.User;
 import com.taskadapter.redmineapi.bean.Version;
+import cz.fg.issuetracking.api.IssueState;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Redmine project - base properties
@@ -37,12 +40,16 @@ public class RedmineProject {
     String stateResolved = "3";
     String stateClosed = "5";
 
+    Map<IssueState,String> stateMap;
+
     // cached data
     String cachedCurrentVersionId;
+    Map<String,User> cachedUsers;
 
     public RedmineProject(RedmineManager redmineManager) {
         this.redmineManager = redmineManager;
         this.customFields = new ArrayList<CustomField>();
+        this.stateMap = new HashMap<IssueState,String>();
     }
 
     public RedmineManager getRedmineManager() {
@@ -71,6 +78,16 @@ public class RedmineProject {
 
     public List<CustomField> getCustomFields() {
         return customFields;
+    }
+
+    public String getState(IssueState issueState) {
+        if (stateMap.isEmpty()) {
+            stateMap.put(IssueState.NEW,getStateNew());
+            stateMap.put(IssueState.UNDER_DEVELOPMENT,getStateInProgress());
+            stateMap.put(IssueState.SOLVED,getStateResolved());
+            stateMap.put(IssueState.RELEASED,getStateClosed());
+        }
+        return stateMap.get(issueState);
     }
 
     public String getStateNew() {
@@ -137,16 +154,19 @@ public class RedmineProject {
 
     protected User getUserByName(String name) {
         try {
-            List<User> users = redmineManager.getUsers();
-            for (User user : users) {
-                if ( name.equalsIgnoreCase(user.getLogin()) ) {
-                    return user;
+            if (cachedUsers==null) {
+                Map<String,User> usersCache = new HashMap<String, User>();
+                List<User> users = redmineManager.getUsers();
+                for (User user : users) {
+                    usersCache.put(user.getLogin().toLowerCase(),user);
                 }
+                cachedUsers = usersCache;
             }
+            return cachedUsers.get(name.toLowerCase());
+
         } catch (RedmineException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
 }

@@ -1,6 +1,7 @@
 package cz.fg.issuetracking.procedure.requirements;
 
 import cz.fg.issuetracking.api.IssueManager;
+import cz.fg.issuetracking.api.IssueState;
 import cz.fg.issuetracking.api.VersionManager;
 import cz.fg.issuetracking.api.procedure.ActionProcedure;
 import cz.fg.issuetracking.api.procedure.ProcedureContext;
@@ -18,8 +19,9 @@ public class ActionCloseCurrentVersion implements ActionProcedure {
 
     @Override
     public void process(ProcedureContext ctx) {
-        issueManager.closeIssues(ctx.getCurrentVersion());
-        versionManager.closeVersion(ctx.getCurrentVersion());
+        String version = ctx.getCurrentVersion();
+        issueManager.setIssueStateInVersion(IssueState.RELEASED,version);
+        versionManager.releaseVersion(version);
     }
 
 }

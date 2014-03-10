@@ -8,6 +8,7 @@ import com.taskadapter.redmineapi.bean.Version;
 import cz.fg.issuetracking.api.Issue;
 import cz.fg.issuetracking.api.IssueImpl;
 import cz.fg.issuetracking.api.IssueManager;
+import cz.fg.issuetracking.api.IssueState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -124,15 +125,31 @@ public class RedmineIssueManager implements IssueManager {
     }
 
     @Override
-    public void closeIssues(String versionValue) {
+    public void setIssueStateInVersion(IssueState state,String versionValue) {
+        Integer statusId = Integer.valueOf(project.getState(state));
         Map<String, String> p = createParams();
         p.put("status_id",NOT_EQUALS + project.getStateClosed());
         p.put("fixed_version_id",project.getVersionIdByName(versionValue).toString());
         try {
             List<com.taskadapter.redmineapi.bean.Issue> issues = project.getRedmineManager().getIssues(p);
             for (com.taskadapter.redmineapi.bean.Issue issue : issues) {
-                issue.setStatusId(Integer.valueOf(project.getStateClosed()));
+                issue.setStatusId(statusId);
                 issue.setDoneRatio(100);
+                project.getRedmineManager().update(issue);
+            }
+        } catch (RedmineException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void setIssueState(IssueState state, String... issueIds) {
+        Integer statusId = Integer.valueOf(project.getState(state));
+        try {
+            for (String issueId : issueIds) {
+                com.taskadapter.redmineapi.bean.Issue issue = project.getRedmineManager()
+                        .getIssueById(Integer.valueOf(issueId));
+                issue.setStatusId(statusId);
                 project.getRedmineManager().update(issue);
             }
         } catch (RedmineException e) {

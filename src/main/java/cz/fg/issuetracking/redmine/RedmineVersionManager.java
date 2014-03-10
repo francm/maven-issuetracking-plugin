@@ -7,6 +7,7 @@ import cz.fg.issuetracking.api.VersionImpl;
 import cz.fg.issuetracking.api.VersionManager;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -74,14 +75,13 @@ public class RedmineVersionManager implements VersionManager {
     }
 
     @Override
-    public void closeVersion(String versionValue) {
+    public void releaseVersion(String versionValue) {
         try {
             List<com.taskadapter.redmineapi.bean.Version> versions = project.getRedmineManager()
                     .getVersions(Integer.valueOf(project.getProjectId()));
             for (com.taskadapter.redmineapi.bean.Version version : versions) {
                 if ( versionValue.equals(version.getName()) ) {
-                    // redmine-java-api/issues/97
-                    //version.setDueDate(new Date());
+                    version.setDueDate(new Date());
                     version.setDueDate(null);
                     version.setStatus("closed");
                     project.getRedmineManager().update(version);
